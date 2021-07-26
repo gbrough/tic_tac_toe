@@ -1,102 +1,70 @@
-#tic tac toe game
-#importing random module
 import random
+# define the board positions
+board = [' ' for i in range(10)]
 
-#defining the board
-board = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-#defining the player's markers
+#defines the player
 player1 = 'X'
-player2 = 'O'
+computer = 'O'
 
-#defining the function that prints the board
+#print the board
 def print_board():
-    print(board[1],'|',board[2],'|',board[3])
-    print('----------')
-    print(board[4],'|',board[5],'|',board[6])
-    print('----------')
-    print(board[7],'|',board[8],'|',board[9])
+    print(board[1] + '|' + board[2] + '|' + board[3])
+    print("------------")
+    print(board[4] + '|' + board[5] + '|' + board[6])
+    print("------------")
+    print(board[7] + '|' + board[8] + '|' + board[9])
 
-#inserting the markers on the board
-def place_marker(board, marker, position):
-    board[position] = marker
-
-#check if specified position is free
-def check_free(board, position):
-    return board[position] == ' '
-
-#check whether the player has won
-def check_win(board, marker):
-    return ((board[1] == marker and board[2] == marker and board[3] == marker) or #top row
-    (board[4] == marker and board[5] == marker and board[6] == marker) or #middle row
-    (board[7] == marker and board[8] == marker and board[9] == marker) or #bottom row
-    (board[1] == marker and board[4] == marker and board[7] == marker) or #left column
-    (board[2] == marker and board[5] == marker and board[8] == marker) or #middle column
-    (board[3] == marker and board[6] == marker and board[9] == marker) or #right column
-    (board[1] == marker and board[5] == marker and board[9] == marker) or #diagonal
-    (board[3] == marker and board[5] == marker and board[7] == marker)) #diagonal
-
-#player1's turn
-def player1_turn(board):
-    position = 1
-    while position not in [1,2,3,4,5,6,7,8,9] or not check_free(board, position):
-        position = int(input('Player 1, choose a position: (1-9) '))
-    place_marker(board, player1, position)
-    
-#computer's turn
-def computer_turn(board):
-    position = 1
-    while position not in [1,2,3,4,5,6,7,8,9] or not check_free(board, position):
-        position = random.randint(1,9)
-    place_marker(board, player2, position)
-
-#randomly choosing who goes first
-def choose_first():
+print_board()
+#find if board is full or not
+def is_full():
+    if ' ' in board:
+        return False
+    else:
+        return True
+#who goes first
+def who_goes_first():
     if random.randint(0,1) == 0:
         return 'Player 1'
     else:
-        return 'Player 2'
+        return 'computer'
+        
+#place a mark on the board
+def place_mark(mark, position):
+    board[position] = mark
 
-#check if the board is full
-def check_full(board):
-    for i in range(1,10):
-        if check_free(board, i):
-            return False
-    return True
+#check if space is free
+def is_free(position):
+    return board[position] == ' '
 
-#game play
-def play_game():
-    print('Welcome to Tic Tac Toe!')
-    print('Player 1 is ' + player1 + ' and Player 2 is ' + player2)
+#player 1 turn
+def player_1_turn():
+    position = int(input("Player 1, enter the position you want to place your mark: "))
+    place_mark(player1, position)
     print_board()
-    turn = choose_first()
-    print(turn + ' will go first.')
-    game_on = True
-    while game_on:
-        if turn == 'Player 1':
-            player1_turn(board)
-            print_board()
-            if check_win(board, player1):
-                print('Congratulations! You won!')
-                game_on = False
-            else:
-                if check_full(board):
-                    print('The game is a draw!')
-                    break
-                else:
-                    turn = 'Player 2'
-        else:
-            computer_turn(board)
-            print_board()
-            if check_win(board, player2):
-                print('You lost!')
-                game_on = False
-            else:
-                if check_full(board):
-                    print('The game is a draw!')
-                    break
-                else:
-                    turn = 'Player 1'
-    print('Thanks for playing!')
 
-play_game()
+#computers turn
+def computer_turn():
+    position = random.randint(0,8)
+    place_mark(computer, position)
+    print_board()
+
+#check if someone has won
+def check_win():
+    return (board[1] == board[2] == board[3] == player1 or board[4] == board[5] == board[6] == player1 or board[6] == board[7] == board[8] == board[9] == player1 or board[1] == board[4] == board[7] == player1 or board[2] == board[5] == board[8] == player1 or board[3] == board[6] == board[9] == player1 or board[1] == board[5] == board[9] == player1 or board[3] == board[5] == board[7] == player1 or board[1] == board[2] == board[3] == computer or board[4] == board[5] == board[6] == computer or board[6] == board[7] == board[8] == board[9] == computer or board[1] == board[4] == board[7] == computer or board[2] == board[5] == board[8] == computer or board[3] == board[6] == board[9] == computer or board[1] == board[5] == board[9] == computer or board[3] == board[5] == board[7] == computer)
+
+#start game
+while not is_full():
+    player_1_turn()
+    if check_win():
+        print("Player 1 has won")
+        break
+        
+    if check_win():
+        print("Computer has won")
+        break
+    if is_full():
+        print("It's a draw")
+        break
+
+
+
