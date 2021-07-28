@@ -38,9 +38,9 @@ def playerMove():
                 else:
                     print('Sorry, this space is occupied!')
             else:
-                print('Please type a number within the range!')
+                print('Please type a number between 1 and 9.')
         except:
-            print('Please type a number!')
+            print('Please type a number between 1 and 9.')
             
 
 def compMove():
@@ -119,7 +119,7 @@ def main():
         print('Tie Game!')
 
 while True:
-    answer = input('Do you want to play again? (Y/N)')
+    answer = input('Would you like to play Tic Tac Toe? (Y/N)')
     if answer.lower() == 'y' or answer.lower == 'yes':
         board = [' ' for x in range(10)]
         print('-----------------------------------')
