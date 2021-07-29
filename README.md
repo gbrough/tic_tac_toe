@@ -1,6 +1,5 @@
 ### Known Issues
-- Tie is not working
-- Randomize starting player not implemented 
+
 - Computer is basic random play, not checking for win or block
 
 ### Here is the design of Tic Tac Toe
