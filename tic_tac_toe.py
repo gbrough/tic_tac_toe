@@ -1,6 +1,6 @@
 import random
 
-player1 = 'X'
+player = 'X'
 computer = 'O'
 
 #define the board
@@ -20,7 +20,7 @@ def is_full():
 
 # check if win
 def check_win():
-  return (board[1] == board[2] == board[3] == player1) or (board[4] == board[5] == board[6] == player1) or (board[7] == board[8] == board[9] == player1) or (board[1] == board[4] == board[7] == player1) or (board[2] == board[5] == board[8] == player1) or (board[3] == board[6] == board[9] == player1) or (board[1] == board[5] == board[9] == player1) or (board[3] == board[5] == board[7] == player1) or (board[1] == board[2] == board[3] == computer) or (board[4] == board[5] == board[6] == computer) or (board[7] == board[8] == board[9] == computer) or (board[1] == board[4] == board[7] == computer) or (board[2] == board[5] == board[8] == computer) or (board[3] == board[6] == board[9] == computer) or (board[1] == board[5] == board[9] == computer) or (board[3] == board[5] == board[7] == computer)
+  return (board[1] == board[2] == board[3] == player) or (board[4] == board[5] == board[6] == player) or (board[7] == board[8] == board[9] == player) or (board[1] == board[4] == board[7] == player) or (board[2] == board[5] == board[8] == player) or (board[3] == board[6] == board[9] == player) or (board[1] == board[5] == board[9] == player) or (board[3] == board[5] == board[7] == player) or (board[1] == board[2] == board[3] == computer) or (board[4] == board[5] == board[6] == computer) or (board[7] == board[8] == board[9] == computer) or (board[1] == board[4] == board[7] == computer) or (board[2] == board[5] == board[8] == computer) or (board[3] == board[6] == board[9] == computer) or (board[1] == board[5] == board[9] == computer) or (board[3] == board[5] == board[7] == computer)
 
 # is space free
 def is_free(position):
@@ -30,12 +30,19 @@ def is_free(position):
 def place_marker(marker, position):
     board[position] = marker
 
+#who goes first
+def who_goes_first():
+    if random.randint(0,1) == 0:
+        return player
+    else:
+        return computer
+
 #player 1 turn
 def player_1_turn():
     position = int(input('Player 1, choose a position: '))
     try:
         if is_free(position):
-            place_marker(player1, position)
+            place_marker(player, position)
         else:
             print('That position is not free')
             player_1_turn()
@@ -43,23 +50,9 @@ def player_1_turn():
         print('Please choose between 1 and 9')
         player_1_turn()
 
-def who_goes_first():
-    if random.randint(0,1) == 0:
-        return player1
-    else:
-        return computer
-
-current_player = who_goes_first()
-def switch_player():
-  global current_player
-  if current_player == player1:
-    current_player = computer
-  else:
-    current_player = player1
-
 #current player turn
 def current_player_turn():
-    if current_player == player1:
+    if current_player == player:
         player_1_turn()
     else:
         computer_turn()
@@ -72,6 +65,15 @@ def computer_turn():
     else:
         computer_turn()
 
+#switch the player
+current_player = who_goes_first()
+def switch_player():
+  global current_player
+  if current_player == player:
+    current_player = computer
+  else:
+    current_player = player
+
 # run the game
 def main():
   print('Welcome to Tic Tac Toe!')
@@ -80,9 +82,11 @@ def main():
       switch_player()
       current_player_turn()
       if check_win():
+        print_board()
         print(current_player + ' has won!')
         break
       if is_full():
+        print_board()
         print('The game is a draw!')
         break
 # start the game
