@@ -20,15 +20,16 @@ def is_full():
   return ' ' not in board[1:10]
  
 #check if there is a winner
-def check_win(board, current_player):
-  return (board[1] == board[2] == board[3] == current_player) or \
-         (board[4] == board[5] == board[6] == current_player) or \
-         (board[7] == board[8] == board[9] == current_player) or \
-         (board[1] == board[4] == board[7] == current_player) or \
-         (board[2] == board[5] == board[8] == current_player) or \
-         (board[3] == board[6] == board[9] == current_player) or \
-         (board[1] == board[5] == board[9] == current_player) or \
-         (board[3] == board[5] == board[7] == current_player)
+def check_win(board, letter):
+  return (board[1] == board[2] == board[3] == letter) or \
+         (board[4] == board[5] == board[6] == letter) or \
+         (board[7] == board[8] == board[9] == letter) or \
+         (board[1] == board[4] == board[7] == letter) or \
+         (board[2] == board[5] == board[8] == letter) or \
+         (board[3] == board[6] == board[9] == letter) or \
+         (board[1] == board[5] == board[9] == letter) or \
+         (board[3] == board[5] == board[7] == letter) or \
+         (board[1] == board[2] == board[3] == letter)
 
 #is a space free
 def is_free(board, position):
@@ -74,13 +75,24 @@ def computer_turn():
     copy = duplicate_board(board)
     if is_free(copy, i):
       place_marker(copy, computerLetter, i)
-      print(f'{copy} copy after place marker')
       if check_win(copy, computerLetter):
+        place_marker(board, computerLetter, i)
+        return
+    else:
+      continue
+#check if player can win
+  for i in range(1,10):
+    copy = duplicate_board(board)
+    if is_free(copy, i):
+      place_marker(copy, playerLetter, i)
+      print(f'{copy} copy after place marker')
+      if check_win(copy, playerLetter):
         place_marker(board, computerLetter, i)
         print(f'{board} board after place marker')
         return
     else:
       continue
+
   if is_free(board, position):
    place_marker(board, computerLetter, position)
   else:
