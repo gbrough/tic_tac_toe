@@ -67,14 +67,14 @@ def duplicate_board(board):
     duplicate_board.append(i)
   return duplicate_board
 
-def chooseRandomMoveFromList(board, movesList):
+def random_Choice(board, movesList):
   possibleMoves = []
   for i in movesList:
     if is_free(board, i):
       possibleMoves.append(i)
   if len(possibleMoves) != 0:
     random.choice(possibleMoves)
-    place_marker(board, current_player, random.choice(possibleMoves))
+    return i
   else:
     return None
 
@@ -103,19 +103,27 @@ def computer_turn():
         return
     else:
       continue
-  # play on corners
-  move = chooseRandomMoveFromList(board, [1, 3, 7, 9])
-  if move != None:
-    return move
-# Try to take the center, if it is free.
-  if is_free(board, 5):
-    return 5
-# Move on one of the sides.
-  return chooseRandomMoveFromList(board, [2, 4, 6, 8])
-  
-      
+  move = random_Choice(board, [1, 3, 7, 9])
+  #If player goes first
+  if first_player == playerLetter:
+    print('player went first')
+    if is_free(board, 5):
+      return place_marker(board, computerLetter, 5)     
+    if move != None:
+      return place_marker(board, computerLetter, move)  
+    return place_marker(board, computerLetter, random.choice(possibleMoves))
+  #If computer goes first
+  if first_player == computerLetter:
+    print('computer went first')
+    if move != None:
+      return place_marker(board, computerLetter, move)
+    if is_free(board, 5):
+      return place_marker(board, computerLetter, 5)
+    return place_marker(board, computerLetter, random.choice(possibleMoves))
+        
 #switch the player and computer
-current_player = who_goes_first()
+first_player = who_goes_first()
+current_player = first_player
 def switch_player():
   global current_player
   if current_player == playerLetter:
@@ -133,11 +141,10 @@ def current_player_turn():
 #run the game
 def main():
   print('Welcome to Tic Tac Toe!')
-
   while True:
     print_board()
-    switch_player()
     current_player_turn()
+    switch_player()
     if check_win(board, current_player):
       print_board()
       print(current_player + ' won!')
