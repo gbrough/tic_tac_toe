@@ -67,10 +67,21 @@ def duplicate_board(board):
     duplicate_board.append(i)
   return duplicate_board
 
+def chooseRandomMoveFromList(board, movesList):
+  possibleMoves = []
+  for i in movesList:
+    if is_free(board, i):
+      possibleMoves.append(i)
+  if len(possibleMoves) != 0:
+    random.choice(possibleMoves)
+    place_marker(board, current_player, random.choice(possibleMoves))
+  else:
+    return None
+
 #computer turn
 def computer_turn():
   #check if computer can win
-  position = random.randint(1, 9)
+  possibleMoves = [x for x, letter in enumerate(board) if letter == ' ' and x != 0]
   for i in range(1,10):
     copy = duplicate_board(board)
     if is_free(copy, i):
@@ -92,11 +103,16 @@ def computer_turn():
         return
     else:
       continue
-
-  if is_free(board, position):
-   place_marker(board, computerLetter, position)
-  else:
-    computer_turn()
+  # play on corners
+  move = chooseRandomMoveFromList(board, [1, 3, 7, 9])
+  if move != None:
+    return move
+# Try to take the center, if it is free.
+  if is_free(board, 5):
+    return 5
+# Move on one of the sides.
+  return chooseRandomMoveFromList(board, [2, 4, 6, 8])
+  
       
 #switch the player and computer
 current_player = who_goes_first()
