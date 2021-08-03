@@ -70,20 +70,22 @@ def duplicate_board(board):
 def computer_turn():
   #check if computer can win
   position = random.randint(1, 9)
-  i = 1
-  while i < 10:
+  for i in range(1,10):
     copy = duplicate_board(board)
     if is_free(copy, i):
+      place_marker(copy, computerLetter, i)
+      print(f'{copy} copy after place marker')
       if check_win(copy, computerLetter):
-        place_marker(board, computerLetter, position)
-
+        place_marker(board, computerLetter, i)
+        print(f'{board} board after place marker')
+        return
+    else:
+      continue
   if is_free(board, position):
-    place_marker(board, computerLetter, position)
+   place_marker(board, computerLetter, position)
+  else:
+    computer_turn()
       
-      
-
-      
-
 #switch the player and computer
 current_player = who_goes_first()
 def switch_player():
