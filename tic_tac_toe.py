@@ -41,7 +41,7 @@ def place_marker(board, mark, position):
 
 #who goes first
 def who_goes_first():
-  if random.randint(0, 1) == 0:
+  if random.randint(0,1) == 0:
     return playerLetter
   else:
     return computerLetter
@@ -51,7 +51,7 @@ def player_turn():
   position = int(input('Choose a position: '))
   try:
     if is_free(board, position):
-      place_marker(board, playerLetter , position)
+      place_marker(board, playerLetter, position)
     else:
       print('This position is not free')
       player_turn()
@@ -67,21 +67,9 @@ def duplicate_board(board):
     duplicate_board.append(i)
   return duplicate_board
 
-def random_Choice(board, movesList):
-  possibleMoves = []
-  for i in movesList:
-    if is_free(board, i):
-      possibleMoves.append(i)
-  if len(possibleMoves) != 0:
-    random.choice(possibleMoves)
-    return i
-  else:
-    return None
-
 #computer turn
 def computer_turn():
   #check if computer can win
-  possibleMoves = [x for x, letter in enumerate(board) if letter == ' ' and x != 0]
   for i in range(1,10):
     copy = duplicate_board(board)
     if is_free(copy, i):
@@ -96,63 +84,58 @@ def computer_turn():
     copy = duplicate_board(board)
     if is_free(copy, i):
       place_marker(copy, playerLetter, i)
-      print(f'{copy} copy after place marker')
       if check_win(copy, playerLetter):
+        print('place marker for win')
         place_marker(board, computerLetter, i)
-        print(f'{board} board after place marker')
         return
     else:
       continue
-  move = random_Choice(board, [1, 3, 7, 9])
-  #If player goes first
-  if first_player == playerLetter:
-    print('player went first')
-    if is_free(board, 5):
-      return place_marker(board, computerLetter, 5)     
-    if move != None:
-      return place_marker(board, computerLetter, move)  
-    return place_marker(board, computerLetter, random.choice(possibleMoves))
-  #If computer goes first
-  if first_player == computerLetter:
-    print('computer went first')
-    if move != None:
-      return place_marker(board, computerLetter, move)
-    if is_free(board, 5):
-      return place_marker(board, computerLetter, 5)
-    return place_marker(board, computerLetter, random.choice(possibleMoves))
-        
-#switch the player and computer
-first_player = who_goes_first()
-current_player = first_player
-def switch_player():
-  global current_player
-  if current_player == playerLetter:
-    current_player = computerLetter
-  else:
-    current_player = playerLetter
-
-#current player
-def current_player_turn():
-  if current_player == playerLetter:
-    player_turn()
-  else:
-    computer_turn()
+  #Choose corners, middle and edges
+  possibleMoves = [x for x, letter in enumerate(board) if letter == ' ' and x != 0]
+  corners = [1,3,7,9]
+  edges = [2,4,6,8]
+  for i in corners:
+    if i in possibleMoves:
+      print('place marker on corner')
+      return place_marker(board, computerLetter, i)
+  if is_free(board, 5):
+    print('place marker on center')
+    return place_marker(board, computerLetter, 5)   
+  for i in edges:
+    if i in possibleMoves:
+      print('place marker on edge')
+      return place_marker(board, computerLetter, i)
 
 #run the game
 def main():
   print('Welcome to Tic Tac Toe!')
+  turn = who_goes_first()
   while True:
-    print_board()
-    current_player_turn()
-    switch_player()
-    if check_win(board, current_player):
+    if turn == playerLetter:
       print_board()
-      print(current_player + ' won!')
-      break
-    if is_full():
-      print_board()
-      print('Draw!')
-      break
-
+      player_turn()
+      if check_win(board, playerLetter):
+        print_board()
+        print('You won!')
+        break
+      elif is_full():
+        print_board()
+        print('It is a draw!')
+        break
+      else:
+        turn = computerLetter
+    else:
+      computer_turn()
+      if check_win(board, computerLetter):
+        print_board()
+        print('You lost!')
+        break
+      elif is_full():
+        print_board()
+        print('It is a draw!')
+        break
+      else:
+        turn = playerLetter
+        
 #start the game
 main()
