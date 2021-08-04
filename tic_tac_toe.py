@@ -40,6 +40,7 @@ def place_marker(board, mark, position):
   board[position] = mark
 
 #who goes first
+turn = ''
 def who_goes_first():
   if random.randint(0,1) == 0:
     return playerLetter
@@ -85,25 +86,21 @@ def computer_turn():
     if is_free(copy, i):
       place_marker(copy, playerLetter, i)
       if check_win(copy, playerLetter):
-        print('place marker for win')
         place_marker(board, computerLetter, i)
         return
     else:
       continue
-  #Choose corners, middle and edges
+  #If computer plays first corners, middle, and edges
   possibleMoves = [x for x, letter in enumerate(board) if letter == ' ' and x != 0]
   corners = [1,3,7,9]
   edges = [2,4,6,8]
   for i in corners:
     if i in possibleMoves:
-      print('place marker on corner')
       return place_marker(board, computerLetter, i)
   if is_free(board, 5):
-    print('place marker on center')
     return place_marker(board, computerLetter, 5)   
   for i in edges:
     if i in possibleMoves:
-      print('place marker on edge')
       return place_marker(board, computerLetter, i)
 
 #run the game
